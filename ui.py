@@ -24,8 +24,7 @@ class GRAuthorNotes(InterfaceAction):
     # The keyboard shortcut can be None if you dont want to use a keyboard
     # shortcut. Remember that currently calibre has no central management for
     # keyboard shortcuts, so try to use an unusual/unused shortcut.
-    action_spec = ('GR Author Notes', None,
-            _('Add GR author bio to author notes'), None)
+    action_spec = ('GR Author Notes', None, 'Add GR author bio to author notes', None)
 
     def genesis(self):
         # This method is called once per plugin, do initial setup here

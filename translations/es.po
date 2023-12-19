@@ -1,0 +1,162 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2023-12-18 01:45-0500\n"
+"PO-Revision-Date: 2023-12-18 01:45-0500\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.4.1\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-SearchPath-0: ui.py\n"
+"X-Poedit-SearchPath-1: config.py\n"
+"X-Poedit-SearchPath-2: __init__.py\n"
+"X-Poedit-SearchPath-3: unzip.py\n"
+"X-Poedit-SearchPath-4: authornotes.py\n"
+"X-Poedit-SearchPath-5: main.py\n"
+
+#: main.py:18
+msgid "Getting bio for"
+msgstr "Obtener biografía para"
+
+#: main.py:22
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: main.py:105
+msgid "GR Author Notes"
+msgstr "Notas Autor Goodreads"
+
+#: main.py:108
+msgid "Function"
+msgstr "Función"
+
+#: main.py:111
+msgid "Write Author bio to author notes"
+msgstr "Escribe biografía del autor en notas del autor"
+
+#: main.py:115
+msgid "Author Selection"
+msgstr "Seleccionar Autor"
+
+#: main.py:117
+msgid "All Authors"
+msgstr "Todos los Autores"
+
+#: main.py:118
+msgid "Selected Books"
+msgstr "Seleccionar Libros"
+
+#: main.py:123
+msgid "Clear notes from authors"
+msgstr "Limpiar notas de Autor"
+
+#: main.py:128
+msgid "Update existing notes"
+msgstr "Actualizar notas existentes"
+
+#: main.py:131
+msgid "Process Authors"
+msgstr "Procesar"
+
+#: main.py:138
+msgid "Configure this plugin"
+msgstr "Configurar complemento"
+
+#: main.py:146
+msgid "About"
+msgstr "Acerca"
+
+#: main.py:169
+msgid "About GR Author Notes"
+msgstr "Acerca Notas autor Goodreads"
+
+#: main.py:187
+msgid "Cannot process books"
+msgstr "No se pueden procesar libros"
+
+#: main.py:188
+msgid "No books selected"
+msgstr "No hay libros seleccionados"
+
+#: main.py:196
+msgid "Generated using the GR Author Notes plugin"
+msgstr "Generado usando el complemento Notas Autor Goodreads"
+
+#: main.py:202
+msgid "Error"
+msgstr "Error"
+
+#: main.py:202
+msgid ""
+"No authors selected. Make sure you have chosen the correct Author Selection "
+"and/or that you have books selected."
+msgstr ""
+"No se seleccionaron autores. Asegúrate de haber elegido la selección de "
+"autor correcta y/o de tener libros seleccionados."
+
+#: main.py:206
+msgid "Info"
+msgstr "Información"
+
+#: main.py:206
+msgid "All selected authors already have their note set by GR Author Notes."
+msgstr ""
+"Todos los autores seleccionados ya tienen su nota configurada por Notas "
+"Autor Goodreads."
+
+#: main.py:210
+msgid "Cleared"
+msgstr "Limpiado"
+
+#: main.py:210
+msgid "Added"
+msgstr "Agregado"
+
+#: main.py:214
+#, python-brace-format
+msgid ""
+"Process was canceled after updating {dlg.authorstotal} author(s) \n"
+"\n"
+"{event} a total of {dlg.authorstotal} author bios to notes.\n"
+"\n"
+msgstr ""
+"El proceso se canceló después de actualizar {dlg.authorstotal} autor(es)\n"
+"\n"
+"{event} un total de {dlg.authorstotal} biografías de autores y notas.\n"
+"\n"
+
+#: main.py:216
+msgid "Canceled"
+msgstr "Cancelado"
+
+#: main.py:218
+msgid ""
+"Processed {len(authors)} author(s) \n"
+"\n"
+"{event} a total of {dlg.authorstotal} author bios to notes. \n"
+"\n"
+msgstr ""
+"Autor(es) procesado(s) {len(authors)}\n"
+"\n"
+"{event} un total de {dlg.authorstotal} biografías de autores y notas.\n"
+"\n"
+
+#: main.py:220
+msgid "Updated files"
+msgstr "Archivos actualizados"
+
+#: main.py:225
+#, python-brace-format
+msgid ""
+"{text}A total of {dlg.skippedtotal} author(s) were skipped based on html "
+"content."
+msgstr ""
+"{text}Se omitió un total de {dlg.skippedtotal} autores según el contenido "
+"html."
+
+#~ msgid "Add GR author bio to author notes"
+#~ msgstr "Agrega biografía del autor de Goodreads en notas del autor"

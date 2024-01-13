@@ -1,36 +1,73 @@
 import base64
 import contextlib
-from html import unescape
+import re
+import json
 
-from calibre_plugins.grauthornotes.config import prefs
+from calibre_plugins.grauthornotes.config import prefs # type: ignore
+from calibre_plugins.grauthornotes.trans import translate, translate_list # type: ignore
+from calibre_plugins.grauthornotes.unzip import install_chrome # type: ignore
 
 import requests
 from bs4 import BeautifulSoup as bs
+
+def link(author, db):
+    alink = ''
+    books = db.books_for_field('authors', author[0])
+    for book in books:
+        mi = db.get_metadata(book)
+        url = get_book_url(mi)
+        if not url:
+            continue
+        gr_authors = get_booksoup(url)
+        aname = ''.join(get_aname(author).split())
+        for a in gr_authors:
+            clname = ''.join(a.get('name').split())
+            if aname.lower() != clname.lower():
+                print(f'{aname} is not the same as {clname}')
+                continue
+            else:
+                print(f'{aname} is the same as {clname}')
+                alink = a.get('url')
+        if alink != '':
+            break
+    if alink != '':
+        aval = {author[1].get('name') : alink}
+        db.set_link_map('authors', aval, True)
+        return alink
+    else:
+        return ''
 
 
 def clear(author, db):
     ### Find Author and clear notes ###
     try:
         db.set_notes_for('authors', author[0], '')
-        return "complete"
+        return True
     except Exception:
-        return "skipped"
+        return False
 
-def notes(author, db, bgcolor, bordercolor, textcolor):
+def notes(author, db, bgcolor, bordercolor, textcolor, author_link):
     ### Find Author and add notes from GR Bio ###
     for _ in range(5):
         with contextlib.suppress(Exception):
             
             try:
+                url = ''
+                if author_link != '':
+                    url = author_link
+                elif not prefs['only_confirmed']:
+                    url = get_author_url(author)
+                if not url:
+                    return False
                 #Get BeautifulSoup object
-                soup = get_soup(author)
+                soup = get_soup(url)
             except Exception:
                 print("Soup Error")
 
             #Get authorName
             authorName = soup.find(class_ = "authorName")
             if authorName == '':
-                return "skipped"
+                return False
 
             try:
                 #Get Author bio
@@ -41,7 +78,7 @@ def notes(author, db, bgcolor, bordercolor, textcolor):
             #Get dataTitles
             dataTitles = soup.find_all(class_ = "dataTitle")
             if len(dataTitles) == 0 and bio == '':
-                return "skipped"
+                return False
             titles = [t.text.strip() for t in dataTitles]
             
 
@@ -62,6 +99,13 @@ def notes(author, db, bgcolor, bordercolor, textcolor):
             except Exception:
                 print("get image error")
 
+            #Translate
+            if prefs['translate']:
+                lang = prefs['language']
+                bio = translate(bio, lang)
+                titles = translate_list(titles, lang)
+                items = translate_list(items, lang)
+
             #Generate html
             try:
                 html = gen_html(authorName, bio, titles, items, dataurl)
@@ -70,9 +114,12 @@ def notes(author, db, bgcolor, bordercolor, textcolor):
                 print("html error")
 
             #Set author note
-            db.import_note('authors', author[0], html, path_is_data=True)
-            return "complete"
-    return "skipped"
+            try:
+                db.import_note('authors', author[0], html, path_is_data=True)
+                return True
+            except Exception:
+                return False
+    return False
 
 def gen_html(authorName, bio, titles, items, dataurl):
     html = "<div>\r\n   <table border=\"0\" style=\"border-collapse: collapse\" cellspacing=\"2\" cellpadding=\"0\">\r\n      <thead>\r\n         <tr>\r\n            <td bgcolor=\"[bgcolor]\" style=\"vertical-align: middle; padding-left: 5; padding-right: 5; padding-top: 10; padding-bottom: 10; border-top: 1px; border-right: 1px; border-bottom: 1px; border-left: 1px; border-top-color: [bordercolor]; border-right-color: [bordercolor]; border-bottom-color: [bordercolor]; border-left-color: [bordercolor]; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid\">\r\n               <h1 align=\"center\" style=\"margin-top: 18px; margin-bottom: 12px; margin-left: 0px; margin-right: 0px; text-indent: 0px; background-color: [bgcolor]\"><strong style=\"font-family: \'Arial\',\'sans-serif\'; font-size: xx-large; color: [textcolor]\">"
@@ -89,6 +136,12 @@ def html_color(bgcolor, bordercolor, textcolor, html):
     html = html.replace("[textcolor]", textcolor)
     return html
 
+def get_aname(author):
+    pattern = re.compile('editor', re.IGNORECASE)
+    aname = author[1].get('name')
+    aname = pattern.sub('', aname)
+    return aname.replace('()', '').strip()
+
 def get_author_image(soup):
     imgdiv = soup.find( class_ = "leftContainer authorLeftContainer")
     imgurl = imgdiv.find( "img" )['src']
@@ -102,12 +155,24 @@ def get_bio(soup):
     biospans = biodiv.find_all( "span" )
     return biospans[-1] if len(biospans) >= 1 else ''
 
-def get_soup(author):
-    aname = author[1].get('name')
+def get_author_url(author):
+    aname = get_aname(author)
     aname = aname.replace(' ', '%20')
-    url = f'https://www.goodreads.com/book/author/{aname}'
+    return f'https://www.goodreads.com/book/author/{aname}'
+
+def set_author_link(author, link, db):
+    return
+
+def get_soup(url):
     webdata = requests.get(url)
     return bs(webdata.text, "html.parser")
+
+def get_booksoup(url):
+    soup = get_soup(url)
+    for script in soup.find_all("script",type="application/ld+json"):
+        book_dict = json.loads(script.contents[0])
+    return book_dict.get('author') if book_dict else {}
+
 
 def items_list(dataItems):
     items = []
@@ -119,6 +184,20 @@ def items_list(dataItems):
             i = i.decode_contents().replace('href="/', 'href="https://www.goodreads.com/').strip()
         items.append(i)
     return items
+
+def get_book_url(book):
+    ids = book.identifiers
+    goodreads = ids.get('goodreads')
+    isbn = ids.get('isbn')
+    amazon = ids.get('amazon')
+    if goodreads:
+        return f'https://www.goodreads.com/book/show/{goodreads}'
+    elif isbn:
+        return f'https://www.goodreads.com/book/isbn/{isbn}'
+    elif amazon:
+        return f'https://www.goodreads.com/book/isbn/{amazon}'
+    else:
+        return ''
 
 def fix_items(items, dataTitles, titles):
     if titles[0] == "Born":

@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2023-12-18 01:45-0500\n"
-"PO-Revision-Date: 2023-12-18 01:45-0500\n"
+"POT-Creation-Date: 2023-12-23 01:57-0500\n"
+"PO-Revision-Date: 2023-12-23 01:57-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: es\n"
@@ -18,79 +18,165 @@ msgstr ""
 "X-Poedit-SearchPath-4: authornotes.py\n"
 "X-Poedit-SearchPath-5: main.py\n"
 
-#: main.py:18
+#: config.py:73
+msgid "Table Colors"
+msgstr "Colores de la mesa"
+
+#: config.py:77
+msgid "Background Color:"
+msgstr "Color de Fondo:"
+
+#: config.py:79 config.py:91 config.py:103
+msgid "Select"
+msgstr "Seleccionar"
+
+#: config.py:89
+msgid "Border Color:"
+msgstr "Color del Borde:"
+
+#: config.py:101
+msgid "Text Color:"
+msgstr "Color de Texto:"
+
+#: config.py:113
+msgid "Author Links"
+msgstr "Enlaces del Autor"
+
+#: config.py:115
+msgid "Set author links for authors who do not have them"
+msgstr "Establecer enlaces de autor para los autores que no los tienen"
+
+#: config.py:120
+msgid "Overwrite existing author links"
+msgstr "Sobrescribir los enlaces de autor existentes"
+
+#: config.py:126
+msgid "Only process for authors with confirmed links"
+msgstr "Proceso sólo para autores con enlaces confirmados"
+
+#: config.py:132
+msgid "Translation"
+msgstr "Traducción"
+
+#: config.py:134
+msgid "Translate author bio"
+msgstr "Traducir biografía del autor"
+
+#: config.py:142
+msgid "Language Code"
+msgstr "Código Idioma"
+
+#: config.py:144
+msgid ""
+"Input the 2 character ISO 639-1 language code. This can be found at the "
+"following URL: <a href=\"https://www.loc.gov/standards/iso639-2/php/"
+"code_list.php\">https://www.loc.gov/standards/iso639-2/php/code_list.php</a>"
+msgstr ""
+"Introduzca el código de idioma ISO 639-1 de 2 caracteres. Puede encontrarlo "
+"en la siguiente URL: <a href=\"https://www.loc.gov/standards/iso639-2/php/"
+"code_list.php\">https://www.loc.gov/standards/iso639-2/php/code_list.php</a>"
+
+#: main.py:17
 msgid "Getting bio for"
 msgstr "Obtener biografía para"
 
-#: main.py:22
+#: main.py:21
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: main.py:105
+#: main.py:34
+msgid "Clearing notes from"
+msgstr "Borrar notas de"
+
+#: main.py:65
+msgid ""
+"Getting author link and {self.action_type.lower()}: {self.author[1]."
+"get(\"name\")}"
+msgstr ""
+"Obtener enlace de autor y {self.action_type.lower()}: {self.author[1]."
+"get(\"name\")}"
+
+#: main.py:111
 msgid "GR Author Notes"
 msgstr "Notas Autor Goodreads"
 
-#: main.py:108
+#: main.py:114
 msgid "Function"
 msgstr "Función"
 
-#: main.py:111
+#: main.py:117
 msgid "Write Author bio to author notes"
 msgstr "Escribe biografía del autor en notas del autor"
 
-#: main.py:115
+#: main.py:121
 msgid "Author Selection"
 msgstr "Seleccionar Autor"
 
-#: main.py:117
+#: main.py:123
 msgid "All Authors"
 msgstr "Todos los Autores"
 
-#: main.py:118
+#: main.py:124
 msgid "Selected Books"
 msgstr "Seleccionar Libros"
 
-#: main.py:123
+#: main.py:129
 msgid "Clear notes from authors"
 msgstr "Limpiar notas de Autor"
 
-#: main.py:128
+#: main.py:134
 msgid "Update existing notes"
 msgstr "Actualizar notas existentes"
 
-#: main.py:131
+#: main.py:137
 msgid "Process Authors"
 msgstr "Procesar"
 
-#: main.py:138
+#: main.py:144
 msgid "Configure this plugin"
 msgstr "Configurar complemento"
 
-#: main.py:146
+#: main.py:152
 msgid "About"
 msgstr "Acerca"
 
-#: main.py:169
+#: main.py:175
 msgid "About GR Author Notes"
 msgstr "Acerca Notas autor Goodreads"
 
 #: main.py:187
+msgid "Cleared"
+msgstr "Limpiado"
+
+#: main.py:187
+msgid "Added"
+msgstr "Agregado"
+
+#: main.py:188
+msgid "from"
+msgstr "de"
+
+#: main.py:188
+msgid "to"
+msgstr "a"
+
+#: main.py:197
 msgid "Cannot process books"
 msgstr "No se pueden procesar libros"
 
-#: main.py:188
+#: main.py:198
 msgid "No books selected"
 msgstr "No hay libros seleccionados"
 
-#: main.py:196
+#: main.py:209
 msgid "Generated using the GR Author Notes plugin"
 msgstr "Generado usando el complemento Notas Autor Goodreads"
 
-#: main.py:202
+#: main.py:215
 msgid "Error"
 msgstr "Error"
 
-#: main.py:202
+#: main.py:215
 msgid ""
 "No authors selected. Make sure you have chosen the correct Author Selection "
 "and/or that you have books selected."
@@ -98,58 +184,50 @@ msgstr ""
 "No se seleccionaron autores. Asegúrate de haber elegido la selección de "
 "autor correcta y/o de tener libros seleccionados."
 
-#: main.py:206
+#: main.py:219
 msgid "Info"
 msgstr "Información"
 
-#: main.py:206
+#: main.py:219
 msgid "All selected authors already have their note set by GR Author Notes."
 msgstr ""
 "Todos los autores seleccionados ya tienen su nota configurada por Notas "
 "Autor Goodreads."
 
-#: main.py:210
-msgid "Cleared"
-msgstr "Limpiado"
-
-#: main.py:210
-msgid "Added"
-msgstr "Agregado"
-
-#: main.py:214
+#: main.py:225
 #, python-brace-format
 msgid ""
 "Process was canceled after updating {dlg.authorstotal} author(s) \n"
 "\n"
-"{event} a total of {dlg.authorstotal} author bios to notes.\n"
+"{event} a total of {dlg.authorstotal} author bios {prep} notes.\n"
 "\n"
 msgstr ""
 "El proceso se canceló después de actualizar {dlg.authorstotal} autor(es)\n"
 "\n"
-"{event} un total de {dlg.authorstotal} biografías de autores y notas.\n"
+"{event} un total de {dlg.authorstotal} biografías de autores {prep} notas.\n"
 "\n"
 
-#: main.py:216
+#: main.py:226
 msgid "Canceled"
 msgstr "Cancelado"
 
-#: main.py:218
+#: main.py:228
 msgid ""
 "Processed {len(authors)} author(s) \n"
 "\n"
-"{event} a total of {dlg.authorstotal} author bios to notes. \n"
+"{event} a total of {dlg.authorstotal} author bios {prep} notes. \n"
 "\n"
 msgstr ""
 "Autor(es) procesado(s) {len(authors)}\n"
 "\n"
-"{event} un total de {dlg.authorstotal} biografías de autores y notas.\n"
+"{event} un total de {dlg.authorstotal} biografías de autores {prep} notas.\n"
 "\n"
 
-#: main.py:220
+#: main.py:229
 msgid "Updated files"
 msgstr "Archivos actualizados"
 
-#: main.py:225
+#: main.py:239
 #, python-brace-format
 msgid ""
 "{text}A total of {dlg.skippedtotal} author(s) were skipped based on html "
@@ -157,6 +235,11 @@ msgid ""
 msgstr ""
 "{text}Se omitió un total de {dlg.skippedtotal} autores según el contenido "
 "html."
+
+#: main.py:245
+#, python-brace-format
+msgid "{text}Added links to a total of {dlg.linkstotal} authors."
+msgstr "{text}Añadidos enlaces a un total de {dlg.linkstotal} autores."
 
 #~ msgid "Add GR author bio to author notes"
 #~ msgstr "Agrega biografía del autor de Goodreads en notas del autor"

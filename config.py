@@ -9,9 +9,9 @@ from qt.core import QWidget, QGridLayout, QLabel, QColorDialog, QColor, QPushBut
 from calibre.utils.config import JSONConfig
 
 try:
-  load_translations()
+    load_translations()
 except NameError:
-  pass # load_translations() added in calibre 1.9
+    pass # load_translations() added in calibre 1.9
 
 # This is where all preferences for this plugin will be stored
 # Remember that this name (i.e. plugins/interface_demo) is also

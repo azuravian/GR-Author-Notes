@@ -4,4 +4,3 @@ GR Author Notes
 Created by Gregory Booth
 
 Requires calibre >= 0.7.53
-

@@ -11,7 +11,7 @@ from calibre.utils.config import JSONConfig # type: ignore
 from calibre.utils.localization import get_udc as _ # type: ignore
 
 with contextlib.suppress(NameError):
-    load_translations() # type: ignore
+    load_translations()
 # This is where all preferences for this plugin will be stored
 # Remember that this name (i.e. plugins/interface_demo) is also
 # in a global namespace, so make it as unique as possible.
@@ -25,19 +25,19 @@ prefs.defaults['bg_color'] = [
     36,
     36,
     255
-  ]
+]
 prefs.defaults['border_color'] = [
     255,
     252,
     240,
     255
-  ]
+]
 prefs.defaults['text_color'] = [
     255,
     255,
     255,
     255
-  ]
+]
 prefs.defaults['update_links'] = True
 prefs.defaults['only_confirmed'] = False
 prefs.defaults['overwrite_links'] = False

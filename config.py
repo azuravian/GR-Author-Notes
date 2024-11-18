@@ -8,6 +8,7 @@ from pathlib import Path
 from qt.core import QWidget, QGridLayout, QLabel, QColorDialog, QColor, QPushButton, QCheckBox, QGroupBox, QHBoxLayout, QVBoxLayout, QLineEdit, Qt # type: ignore
 
 from calibre.utils.config import JSONConfig # type: ignore
+from calibre.utils.localization import get_udc as _ # type: ignore
 
 with contextlib.suppress(NameError):
     load_translations()

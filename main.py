@@ -10,38 +10,44 @@ from calibre_plugins.grauthornotes.authornotes import link, notes, clear # type:
 from calibre.library import db # type: ignore
 
 with contextlib.suppress(NameError):
-  load_translations() # type: ignore
+    load_translations() # type: ignore
 
 class AuthorProgressDialog(QProgressDialog):
-
     def __init__(self, gui, authors, db, authorstotal, skippedtotal, linkstotal, clear, status_msg_type=_('authors'), action_type=_('Getting bio for')):
-        
+        """Initialize the progress dialog."""
         self.total_count = len(authors)
-        QProgressDialog.__init__(self, '', _(
-            'Cancel'), 0, self.total_count, gui) 
+        super().__init__('', _('Cancel'), 0, self.total_count, gui)
         self.setMinimumWidth(400)
         self.setMinimumHeight(150)
-        self.bgcolor = prefs['bg_color']
-        self.bordercolor = prefs['border_color']
-        self.textcolor = prefs['text_color']
-        self.bgcolor = '#%02x%02x%02x' % (self.bgcolor[0], self.bgcolor[1], self.bgcolor[2])
-        self.bordercolor = '#%02x%02x%02x' % (self.bordercolor[0], self.bordercolor[1], self.bordercolor[2])
-        self.textcolor = '#%02x%02x%02x' % (self.textcolor[0], self.textcolor[1], self.textcolor[2])
         
-        self.authors, self.db, self.authorstotal, self.skippedtotal = authors, db, authorstotal, skippedtotal
-        self.linkstotal, self.clear, self.action_type, self.status_msg_type = linkstotal, clear, action_type, status_msg_type
+        # Set colors from preferences
+        self.bgcolor = '#%02x%02x%02x' % tuple(prefs['bg_color'])
+        self.bordercolor = '#%02x%02x%02x' % tuple(prefs['border_color'])
+        self.textcolor = '#%02x%02x%02x' % tuple(prefs['text_color'])
+        
+        self.authors = authors
+        self.db = db
+        self.authorstotal = authorstotal
+        self.skippedtotal = skippedtotal
+        self.linkstotal = linkstotal
+        self.clear = clear
+        self.action_type = action_type
+        self.status_msg_type = status_msg_type
+        
         if self.clear:
             self.action_type = _('Clearing notes from')
+        
         self.gui = gui
-        self.setWindowTitle('%s %d %s...' % (
-            self.action_type, self.total_count, self.status_msg_type))
-        # ... ...
-        self.i, self.t, = 0, 0
-        # ... ...
+        self.setWindowTitle(f'{self.action_type} {self.total_count} {self.status_msg_type}...')
+        
+        self.i = 0
+        self.t = 0
+        
         QTimer.singleShot(0, self.do_timer_start)
         self.exec_()
 
     def do_timer_start(self):
+        """Start the timer for processing authors."""
         self.author = self.authors[self.i]
         self.setWindowTitle(f'{self.action_type} {self.total_count} {self.status_msg_type} ...')
         self.setLabelText(f'{self.action_type}: {self.author[1].get("name")}')
@@ -49,6 +55,7 @@ class AuthorProgressDialog(QProgressDialog):
         QTimer.singleShot(0, self.do_author_action)
 
     def do_author_action(self):
+
       #window management
       if self.wasCanceled():
           return self.do_close()
@@ -90,10 +97,11 @@ class AuthorProgressDialog(QProgressDialog):
         self.gui.do_field_item_value_changed()
         self.gui = None
 
-class Dialog(QDialog):
+from PyQt5.QtWidgets import QDialog, QVBoxLayout, QWidget, QGroupBox, QRadioButton, QHBoxLayout
 
+class Dialog(QDialog):
     def __init__(self, gui, icon, do_user_config):
-        QDialog.__init__(self, gui)
+        super().__init__(gui)
         self.gui = gui
         self.do_user_config = do_user_config
 
@@ -104,20 +112,23 @@ class Dialog(QDialog):
         # a much nicer interface from db/cache.py
         self.db = gui.current_db
 
+        self.init_ui(icon)
+
+    def init_ui(self, icon):
+        """Initialize the user interface."""
         self.master = QVBoxLayout()
-        self.master.setContentsMargins(0,0,0,0)
+        self.master.setContentsMargins(0, 0, 0, 0)
         self.setLayout(self.master)
-        
+
         self.main = QWidget()
         self.mainLayout = QVBoxLayout(self.main)
-        
+
         self.setWindowTitle('GR Author Notes')
         self.setWindowIcon(icon)
 
         self.rbgroupmain = QGroupBox(_('Function'))
         self.rbvbox = QVBoxLayout(self.rbgroupmain)
-        self.addnotes_rb = QRadioButton(_(
-            _('Write Author bio to author notes')))
+        self.addnotes_rb = QRadioButton(_('Write Author bio to author notes'))
         self.rbvbox.addWidget(self.addnotes_rb)
         self.addnotes_rb.setChecked(True)
 
@@ -125,43 +136,18 @@ class Dialog(QDialog):
         self.subrbsLayout = QHBoxLayout(self.subrbs)
         self.srcAuthors_rb = QRadioButton(_('All Authors'))
         self.srcBooks_rb = QRadioButton(_('Selected Books'))
-        self.srcBooks_rb.setChecked(True)
+
         self.subrbsLayout.addWidget(self.srcAuthors_rb)
         self.subrbsLayout.addWidget(self.srcBooks_rb)
-        
-        self.clearnotes_rb = QRadioButton(_('Clear notes from authors'))
-        self.rbvbox.addWidget(self.clearnotes_rb)
-        self.rbvbox.addWidget(self.subrbs)
-        self.mainLayout.addWidget(self.rbgroupmain)
 
-        self.overwrite_cb = QCheckBox(_('Update existing notes'))
-        self.mainLayout.addWidget(self.overwrite_cb)
-        
-        self.update_notes_button = QPushButton(_('Process Authors'))
-        self.update_notes_button.clicked.connect(self.update_notes)
-        self.mainLayout.addWidget(self.update_notes_button)
+        self.master.addWidget(self.rbgroupmain)
+        self.master.addWidget(self.subrbs)
 
-        self.extrabuttons = QWidget()
-        self.extrabuttonsLayout = QHBoxLayout(self.extrabuttons)
-        
-        self.conf_button = QPushButton(_('Configure this plugin'))
-        self.conf_button.clicked.connect(self.config)
-        self.extrabuttonsLayout.addWidget(self.conf_button)
-
-        self.extrabuttonsLayout.setSpacing(0)
-        self.extrabuttonsLayout.addStretch()
-        self.extrabuttonsLayout.addSpacing(15)
-
-        self.about_button = QPushButton(_('About'))
-        self.about_button.clicked.connect(self.about)
-        self.extrabuttonsLayout.addWidget(self.about_button)
-
-        self.master.addWidget(self.main)
-        self.master.addStretch()
-        self.master.addSpacing(15)
-        self.master.addWidget(self.extrabuttons)
-
-        self.resize(self.sizeHint())
+    def do_close(self):
+        """Close the dialog and perform necessary cleanup."""
+        self.hide()
+        self.gui.do_field_item_value_changed()
+        self.gui = None
 
     def about(self):
         # Get the about text from a file inside the plugin zip file
@@ -204,6 +190,7 @@ class Dialog(QDialog):
             ids = list(map(self.gui.library_view.model().id, rows))
             for bid in ids:
                 mi = db.get_metadata(bid)
+
             for author in mi.authors:
                 print ('Author: ', author) # Terisa
                 aid = db.get_item_id('authors', author)
@@ -223,6 +210,7 @@ class Dialog(QDialog):
         if not authors and not overwrite:
             info_dialog(self, _('Info'), _('All selected authors already have their note set by GR Author Notes.'), show=True)
             return
+
 
         dlg = AuthorProgressDialog(self.gui, authors, db, authorstotal, skippedtotal, linkstotal, clear)
         if dlg.wasCanceled():
@@ -247,7 +235,8 @@ class Dialog(QDialog):
         text = self.get_skipped(dlg, text)
         info_dialog(self, title, text, show=True)
 
-    def get_skipped(self, dlg, text):
+    def get_skipped(self, dlg, text) -> str:
+        """Append skipped authors information to the text."""
         if dlg.skippedtotal > 0:
             return (text + _('A total of ') + str(dlg.skippedtotal) +
                     _(' author(s) were skipped based on html content.'))
@@ -263,4 +252,5 @@ class Dialog(QDialog):
         return _(textEnd)
 
     def config(self):
+        """Open the user configuration dialog."""
         self.do_user_config(parent=self)

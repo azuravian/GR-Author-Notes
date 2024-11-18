@@ -18,10 +18,14 @@ def link(author, db):
         url = get_book_url(mi)
         if not url:
             continue
+        print ('url: ', url) # Terisa
         gr_authors = get_booksoup(url)
         aname = ''.join(get_aname(author).split())
+        aname = aname.replace ("'", "&apos;") # Terisa
+        print ('aname: ', aname) # Terisa
         for a in gr_authors:
             clname = ''.join(a.get('name').split())
+            print ('clname: ', clname) # Terisa
             if aname.lower() != clname.lower():
                 print(f'{aname} is not the same as {clname}')
                 continue
@@ -60,23 +64,21 @@ def notes(author, db, bgcolor, bordercolor, textcolor, author_link):
                 if not url:
                     return False
                 #Get BeautifulSoup object
-                print(url)
                 soup = get_soup(url)
-            except Exception:
-                print("Soup Error")
+                #open('D:\\testa.xml','w').write(soup.prettify ())
+            except Exception as e:
+                print("Soup Error: ", e)
 
             #Get authorName
             authorName = soup.find(class_ = "authorName")
-            print(authorName)
             if authorName == '':
                 return False
 
             try:
                 #Get Author bio
-                print(soup)
                 bio = get_bio(soup)
-            except Exception:
-                print("Bio Error")
+            except Exception as e:
+                print("Bio Error: ", e)
 
             #Get dataTitles
             dataTitles = soup.find_all(class_ = "dataTitle")
@@ -155,7 +157,10 @@ def get_author_image(soup):
 
 def get_bio(soup):
     biodiv = soup.find( class_ = "aboutAuthorInfo")
+    #open('D:\\testd.xml','w').write(biodiv.prettify ())
     biospans = biodiv.find_all( "span" )
+    #print (biospans[-1])
+    #print (len (biospans))
     return biospans[-1] if len(biospans) >= 1 else ''
 
 def get_author_url(author):
@@ -167,14 +172,12 @@ def set_author_link(author, link, db):
     return
 
 def get_soup(url):
-    headers = {
-       'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
-    }
-    webdata = requests.get(url, headers=headers)
+    webdata = requests.get(url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"})
     return bs(webdata.text, "html.parser")
 
 def get_booksoup(url):
     soup = get_soup(url)
+    book_dict = {}
     for script in soup.find_all("script",type="application/ld+json"):
         book_dict = json.loads(script.contents[0])
     return book_dict.get('author') if book_dict else {}

@@ -217,16 +217,10 @@ class Dialog(QDialog):
         """Process authors and display progress dialog."""
         dlg = AuthorProgressDialog(self.gui, authors, db, author_total, skipped_total, links_total, clear)
         if dlg.wasCanceled():
-            canceled_text = (
-                f'{_("Process was canceled after updating ")}{dlg.author_total}{_(" author(s) \n\n")}'
-                f'{event}{_(" a total of ")}{dlg.author_total}{_(" author bios ")}{prep}{_(" notes.\n\n")}'
-            )
+            canceled_text = _("Process was canceled after updating ") + dlg.author_total + _(" author(s) \n\n") + event + _(" a total of ") + dlg.author_total + _(" author bios ") + prep + _(" notes.\n\n")
             self.build_dialog(dlg, canceled_text, info_dialog, _('Canceled'))
         else:
-            processed_text = (
-                f'{_("Processed ")}{len(authors)}{_(" author(s) \n\n")}'
-                f'{event}{_(" a total of ")}{dlg.author_total}{_(" author bios ")}{prep}{_(" notes. \n\n")}'
-            )
+            processed_text = _("Processed ") + len(authors) + _(" author(s) \n\n") + event + _(" a total of ") + dlg.author_total + _(" author bios ") + prep + _(" notes. \n\n")
             self.build_dialog(dlg, processed_text, info_dialog, _('Updated files'))
             self.close()
 

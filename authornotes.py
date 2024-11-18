@@ -60,17 +60,20 @@ def notes(author, db, bgcolor, bordercolor, textcolor, author_link):
                 if not url:
                     return False
                 #Get BeautifulSoup object
+                print(url)
                 soup = get_soup(url)
             except Exception:
                 print("Soup Error")
 
             #Get authorName
             authorName = soup.find(class_ = "authorName")
+            print(authorName)
             if authorName == '':
                 return False
 
             try:
                 #Get Author bio
+                print(soup)
                 bio = get_bio(soup)
             except Exception:
                 print("Bio Error")
@@ -164,7 +167,10 @@ def set_author_link(author, link, db):
     return
 
 def get_soup(url):
-    webdata = requests.get(url)
+    headers = {
+       'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
+    }
+    webdata = requests.get(url, headers=headers)
     return bs(webdata.text, "html.parser")
 
 def get_booksoup(url):

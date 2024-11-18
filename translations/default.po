@@ -1,0 +1,241 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-05-26 11:10+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: config.py:73
+msgid "Table Colors"
+msgstr ""
+
+#: config.py:77
+msgid "Background Color:"
+msgstr ""
+
+#: config.py:79 config.py:91 config.py:103
+msgid "Select"
+msgstr ""
+
+#: config.py:89
+msgid "Border Color:"
+msgstr ""
+
+#: config.py:101
+msgid "Text Color:"
+msgstr ""
+
+#: config.py:113
+msgid "Author Links"
+msgstr ""
+
+#: config.py:115
+msgid "Set author links for authors who do not have them"
+msgstr ""
+
+#: config.py:120
+msgid "Overwrite existing author links"
+msgstr ""
+
+#: config.py:126
+msgid "Only process for authors with confirmed links"
+msgstr ""
+
+#: config.py:132
+msgid "Translation"
+msgstr ""
+
+#: config.py:134
+msgid "Translate author bio"
+msgstr ""
+
+#: config.py:142
+msgid "Language Code"
+msgstr ""
+
+#: config.py:144
+msgid ""
+"Input the 2 character ISO 639-1 language code. This can be found at the "
+"following URL: <a href=\"https://www.loc.gov/standards/iso639-2/php/"
+"code_list.php\">https://www.loc.gov/standards/iso639-2/php/code_list.php</a>"
+msgstr ""
+
+#: main.py:17
+msgid "authors"
+msgstr ""
+
+#: main.py:17
+msgid "Getting bio for"
+msgstr ""
+
+#: main.py:21
+msgid "Cancel"
+msgstr ""
+
+#: main.py:34
+msgid "Clearing notes from"
+msgstr ""
+
+#: main.py:65
+msgid "Getting author link and  "
+msgstr ""
+
+#: main.py:116
+msgid "Function"
+msgstr ""
+
+#: main.py:119
+msgid "Write Author bio to author notes"
+msgstr ""
+
+#: main.py:123
+msgid "Author Selection"
+msgstr ""
+
+#: main.py:125
+msgid "All Authors"
+msgstr ""
+
+#: main.py:126
+msgid "Selected Books"
+msgstr ""
+
+#: main.py:131
+msgid "Clear notes from authors"
+msgstr ""
+
+#: main.py:136
+msgid "Update existing notes"
+msgstr ""
+
+#: main.py:139
+msgid "Process Authors"
+msgstr ""
+
+#: main.py:146
+msgid "Configure this plugin"
+msgstr ""
+
+#: main.py:154
+msgid "About"
+msgstr ""
+
+#: main.py:177
+msgid "About GR Author Notes"
+msgstr ""
+
+#: main.py:189
+msgid "Cleared"
+msgstr ""
+
+#: main.py:189
+msgid "Added"
+msgstr ""
+
+#: main.py:190
+msgid "from"
+msgstr ""
+
+#: main.py:190
+msgid "to"
+msgstr ""
+
+#: main.py:199
+msgid "Cannot process books"
+msgstr ""
+
+#: main.py:200
+msgid "No books selected"
+msgstr ""
+
+#: main.py:211
+msgid "Generated using the GR Author Notes plugin"
+msgstr ""
+
+#: main.py:217
+msgid "Error"
+msgstr ""
+
+#: main.py:217
+msgid ""
+"No authors selected. Make sure you have chosen the correct Author Selection "
+"and/or that you have books selected."
+msgstr ""
+
+#: main.py:221
+msgid "Info"
+msgstr ""
+
+#: main.py:221
+msgid "All selected authors already have their note set by GR Author Notes."
+msgstr ""
+
+#: main.py:227
+msgid "Process was canceled after updating "
+msgstr ""
+
+#: main.py:227 main.py:231
+msgid ""
+" author(s) \n"
+"\n"
+msgstr ""
+
+#: main.py:227 main.py:231
+msgid " a total of "
+msgstr ""
+
+#: main.py:227 main.py:231
+msgid " author bios "
+msgstr ""
+
+#: main.py:227
+msgid ""
+" notes.\n"
+"\n"
+msgstr ""
+
+#: main.py:229
+msgid "Canceled"
+msgstr ""
+
+#: main.py:231
+msgid "Processed "
+msgstr ""
+
+#: main.py:231
+msgid ""
+" notes. \n"
+"\n"
+msgstr ""
+
+#: main.py:233
+msgid "Updated files"
+msgstr ""
+
+#: main.py:243
+msgid "A total of "
+msgstr ""
+
+#: main.py:243
+msgid " author(s) were skipped based on html content."
+msgstr ""
+
+#: main.py:251
+msgid "Added links to a total of "
+msgstr ""
+
+#: main.py:251
+msgid " authors."
+msgstr ""

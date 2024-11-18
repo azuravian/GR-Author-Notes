@@ -2,18 +2,15 @@ import base64
 import contextlib
 import re
 import json
-import logging
 
-from calibre_plugins.grauthornotes.config import prefs  # type: ignore
-from calibre_plugins.grauthornotes.trans import translate, translate_list  # type: ignore
-from calibre_plugins.grauthornotes.unzip import install_chrome  # type: ignore
+from calibre_plugins.grauthornotes.config import prefs # type: ignore
+from calibre_plugins.grauthornotes.trans import translate, translate_list # type: ignore
+from calibre_plugins.grauthornotes.unzip import install_chrome # type: ignore
 
 import requests
 from bs4 import BeautifulSoup as bs
 
-logging.basicConfig(level=logging.INFO)
-
-def link(author: tuple, db) -> str:
+def link(author, db):
     alink = ''
     books = db.books_for_field('authors', author[0])
     for book in books:
@@ -21,33 +18,29 @@ def link(author: tuple, db) -> str:
         url = get_book_url(mi)
         if not url:
             continue
-        logging.info('url: %s', url)
-        try:
-            gr_authors = get_booksoup(url)
-        except requests.RequestException as e:
-            logging.error('Failed to get book soup: %s', e)
-            continue
-
-        aname = ''.join(get_aname(author).split()).replace("'", "&apos;")
-        logging.info('aname: %s', aname)
+        print ('url: ', url) # Terisa
+        gr_authors = get_booksoup(url)
+        aname = ''.join(get_aname(author).split())
+        aname = aname.replace ("'", "&apos;") # Terisa
+        print ('aname: ', aname) # Terisa
         for a in gr_authors:
             clname = ''.join(a.get('name').split())
-            logging.info('clname: %s', clname)
+            print ('clname: ', clname) # Terisa
             if aname.lower() != clname.lower():
-                logging.info('%s is not the same as %s', aname, clname)
+                print(f'{aname} is not the same as {clname}')
                 continue
             else:
-                logging.info('%s is the same as %s', aname, clname)
+                print(f'{aname} is the same as {clname}')
                 alink = a.get('url')
-        if alink:
+        if alink != '':
             break
-
-    if alink:
-        aval = {author[1].get('name'): alink}
+    if alink != '':
+        aval = {author[1].get('name') : alink}
         db.set_link_map('authors', aval, True)
         return alink
     else:
         return ''
+
 
 def clear(author, db):
     ### Find Author and clear notes ###
@@ -148,7 +141,7 @@ def html_color(bgcolor, bordercolor, textcolor, html):
     html = html.replace("[textcolor]", textcolor)
     return html
 
-def get_aname(author: tuple) -> str:
+def get_aname(author):
     pattern = re.compile('editor', re.IGNORECASE)
     aname = author[1].get('name')
     aname = pattern.sub('', aname)
@@ -182,7 +175,7 @@ def get_soup(url):
     webdata = requests.get(url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"})
     return bs(webdata.text, "html.parser")
 
-def get_booksoup(url: str):
+def get_booksoup(url):
     soup = get_soup(url)
     book_dict = {}
     for script in soup.find_all("script",type="application/ld+json"):
@@ -201,8 +194,8 @@ def items_list(dataItems):
         items.append(i)
     return items
 
-def get_book_url(mi) -> str:
-    ids = mi.identifiers
+def get_book_url(book):
+    ids = book.identifiers
     goodreads = ids.get('goodreads')
     isbn = ids.get('isbn')
     amazon = ids.get('amazon')

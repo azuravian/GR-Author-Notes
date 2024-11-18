@@ -23,7 +23,7 @@ class GRAuthorNotes(InterfaceActionBase):
     description         = 'Get GR author bio and add to notes'
     supported_platforms = ['windows', 'osx', 'linux']
     author              = 'Gregory Booth'
-    version             = (1, 2, 0)
+    version             = (1, 1, 1)
     minimum_calibre_version = (7, 0, 0)
 
     #: This field defines the GUI plugin class that contains all the code
@@ -75,3 +75,5 @@ class GRAuthorNotes(InterfaceActionBase):
         ac = self.actual_plugin_
         if ac is not None:
             ac.apply_settings()
+
+

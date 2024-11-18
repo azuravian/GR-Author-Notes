@@ -1,17 +1,18 @@
 #!/usr/bin/env python
 # vim:fileencoding=UTF-8:ts=4:sw=4:sta:et:sts=4:ai
-import contextlib
 __license__   = 'GPL v3'
 __copyright__ = '2011, Kovid Goyal <kovid@kovidgoyal.net>'
 __docformat__ = 'restructuredtext en'
 from pathlib import Path
-from qt.core import QWidget, QGridLayout, QLabel, QColorDialog, QColor, QPushButton, QCheckBox, QGroupBox, QHBoxLayout, QVBoxLayout, QLineEdit, Qt # type: ignore
+from qt.core import QWidget, QGridLayout, QLabel, QColorDialog, QColor, QPushButton, QCheckBox, QGroupBox, QHBoxLayout, QVBoxLayout, QLineEdit, Qt
 
-from calibre.utils.config import JSONConfig # type: ignore
-from calibre.utils.localization import get_udc as _ # type: ignore
+from calibre.utils.config import JSONConfig
 
-with contextlib.suppress(NameError):
-    load_translations()
+try:
+  load_translations()
+except NameError:
+  pass # load_translations() added in calibre 1.9
+
 # This is where all preferences for this plugin will be stored
 # Remember that this name (i.e. plugins/interface_demo) is also
 # in a global namespace, so make it as unique as possible.
@@ -25,19 +26,19 @@ prefs.defaults['bg_color'] = [
     36,
     36,
     255
-]
+  ]
 prefs.defaults['border_color'] = [
     255,
     252,
     240,
     255
-]
+  ]
 prefs.defaults['text_color'] = [
     255,
     255,
     255,
     255
-]
+  ]
 prefs.defaults['update_links'] = True
 prefs.defaults['only_confirmed'] = False
 prefs.defaults['overwrite_links'] = False

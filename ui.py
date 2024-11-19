@@ -3,7 +3,7 @@
 
 
 __license__   = 'GPL v3'
-__copyright__ = '2021, Gregory Booth <azuravian@gmail.com>'
+__copyright__ = '2024, Gregory Booth <azuravian@gmail.com>'
 __docformat__ = 'restructuredtext en'
 
 if False:

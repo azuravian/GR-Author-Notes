@@ -6,9 +6,9 @@ import json
 from calibre_plugins.grauthornotes.config import prefs # type: ignore
 from calibre_plugins.grauthornotes.trans import translate, translate_list # type: ignore
 from calibre_plugins.grauthornotes.unzip import install_chrome # type: ignore
+from calibre.utils.logging import Log # type: ignore
 
 import requests
-import logging
 from bs4 import BeautifulSoup as bs
 
 def link(author, db):
@@ -34,19 +34,19 @@ def link(author, db):
         url = get_book_url(mi)      # get the Goodreads URL of the book
         if not url:     # if the URL is not found, continue to the next book             
             continue
-        logging.log(logging.INFO, f'url: {url}')       # Log the URL
+        Log(logging.INFO, f'url: {url}')       # Log the URL
         gr_authors = get_booksoup(url)      # get the list of authors for the book from Goodreads
         cleaned_author_name = ''.join(get_aname(author).split())        # get the author's name from Calibre
         cleaned_author_name = cleaned_author_name.replace ("'", "&apos;")       # Terisa
-        logging.log(logging.INFO, f'Cleaned Author Name: {cleaned_author_name}')        # Terisa
+        Log(logging.INFO, f'Cleaned Author Name: {cleaned_author_name}')        # Terisa
         for a in gr_authors:
             gr_author_name = ''.join(a.get('name').split())        # get the author's name from Goodreads
-            logging.log(logging.INFO, f'GR Author Name: {gr_author_name}') # Terisa
+            Log(logging.INFO, f'GR Author Name: {gr_author_name}') # Terisa
             if cleaned_author_name.lower() != gr_author_name.lower():     # compare the names
-                logging.log(logging.DEBUG, f'{cleaned_author_name} is not the same as {gr_author_name}')
+                Log(logging.DEBUG, f'{cleaned_author_name} is not the same as {gr_author_name}')
                 continue
             else:
-                logging.log(logging.DEBUG, f'{cleaned_author_name} is the same as {gr_author_name}')
+                Log(logging.DEBUG, f'{cleaned_author_name} is the same as {gr_author_name}')
                 alink = a.get('url')
         if alink != '':
             break
@@ -83,7 +83,7 @@ def notes(author, db, bgcolor, bordercolor, textcolor, author_link):
                 soup = get_soup(url)
                 #open('D:\\testa.xml','w').write(soup.prettify ())
             except Exception as e:
-                logging.log(logging.ERROR, f"Soup Error: {e}")
+                Log(logging.ERROR, f"Soup Error: {e}")
 
             #Get authorName
             authorName = soup.find(class_ = "authorName")
@@ -94,7 +94,7 @@ def notes(author, db, bgcolor, bordercolor, textcolor, author_link):
                 #Get Author bio
                 bio = get_bio(soup)
             except Exception as e:
-                logging.log(logging.ERROR, f"Bio Error: {e}")
+                Log(logging.ERROR, f"Bio Error: {e}")
 
             #Get dataTitles
             dataTitles = soup.find_all(class_ = "dataTitle")
@@ -108,17 +108,17 @@ def notes(author, db, bgcolor, bordercolor, textcolor, author_link):
             try:
                 items = items_list(dataItems)
             except Exception as e:
-                logging.log(logging.ERROR, f"Items_List error: {e}")
+                Log(logging.ERROR, f"Items_List error: {e}")
             try:
                 items = fix_items(items, dataTitles, titles)
             except Exception as e:
-                logging.log(logging.ERROR, f"fix_items error: {e}")
+                Log(logging.ERROR, f"fix_items error: {e}")
 
             #Get author image
             try:
                 dataurl = get_author_image(soup)
             except Exception as e:
-                logging.log(logging.ERROR, f"Get image error: {e}")
+                Log(logging.ERROR, f"Get image error: {e}")
 
             #Translate
             if prefs['translate']:
@@ -132,7 +132,7 @@ def notes(author, db, bgcolor, bordercolor, textcolor, author_link):
                 html = gen_html(authorName, bio, titles, items, dataurl)
                 html = html_color(bgcolor, bordercolor, textcolor, html)
             except Exception as e:
-                logging.log(logging.ERROR, f"html error: {e}")
+                Log(logging.ERROR, f"html error: {e}")
 
             #Set author note
             try:

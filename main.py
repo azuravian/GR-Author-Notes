@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 
 import contextlib
-import logging
+
 from qt.core import Qt, QProgressDialog, QDialog, QVBoxLayout, QHBoxLayout, QPushButton, QRadioButton, QMessageBox, QWidget, QTimer, QGroupBox, QCheckBox # type: ignore
 
 from calibre_plugins.grauthornotes.config import prefs # type: ignore
 from calibre_plugins.grauthornotes.unzip import install_libs # type: ignore
 install_libs()
 from calibre_plugins.grauthornotes.authornotes import link, notes, clear # type: ignore
+from calibre.utils.logging import Log # type: ignore
 from calibre.library import db # type: ignore
 
 with contextlib.suppress(NameError):
@@ -207,7 +208,7 @@ class Dialog(QDialog):
             authors = list(db.author_data().items())
         elif self.srcBooks_rb.isChecked():
             # Get currently selected books
-            logging.log(logging.INFO, "Get currently selected books")
+            Log(logging.INFO, "Get currently selected books")
             rows = self.gui.library_view.selectionModel().selectedRows()
             if not rows or len(rows) == 0:
                 return error_dialog(self.gui, _('Cannot process books'),
@@ -217,10 +218,10 @@ class Dialog(QDialog):
             for bid in ids:
                 mi = db.get_metadata(bid)
                 for author in mi.authors:
-                    logging.log(logging.INFO, f'Author: {author}')
+                    Log(logging.INFO, f'Author: {author}')
                     aid = db.get_item_id('authors', author)
                     note = db.export_note('authors', aid)
-                    logging.log(logging.DEBUG, f'Note: {note}')
+                    Log(logging.DEBUG, f'Note: {note}')
                     if clear and note:
                         authorids.append(aid)
                         continue

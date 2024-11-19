@@ -15,6 +15,19 @@ with contextlib.suppress(NameError):
 class AuthorProgressDialog(QProgressDialog):
 
     def __init__(self, gui, authors, db, authorstotal, skippedtotal, linkstotal, clear, status_msg_type=_('authors'), action_type=_('Getting bio for')):
+        """
+        Initialize the progress dialog for processing authors.
+        Args:
+            gui (QWidget): The parent GUI widget.
+            authors (list): List of authors to process.
+            db (Database): The database connection object.
+            authorstotal (int): Total number of authors.
+            skippedtotal (int): Total number of skipped authors.
+            linkstotal (int): Total number of links.
+            clear (bool): Flag to indicate if notes should be cleared.
+            status_msg_type (str, optional): The type of status message. Defaults to _('authors').
+            action_type (str, optional): The type of action being performed. Defaults to _('Getting bio for').
+        """
         
         self.total_count = len(authors)
         QProgressDialog.__init__(self, '', _(
@@ -62,9 +75,8 @@ class AuthorProgressDialog(QProgressDialog):
         # code for processing a single author ...
         author_link = self.author[1].get('link')
         if author_link == '' and prefs['update_links'] == True and not self.clear:
-            textLabel = _(f'Getting author link and  ') + self.action_type.lower() + ': ' + self.author[1].get("name")
+            textLabel = _('Getting author link and  ') + self.action_type.lower() + ': ' + self.author[1].get("name")
             self.setLabelText(textLabel)
-            #self.setLabelText(_(f'Getting author link and {self.action_type.lower()}: {self.author[1].get("name")}'))
             author_link = link(self.author, self.db)
             if author_link:
                 self.linkstotal += 1
@@ -178,69 +190,67 @@ class Dialog(QDialog):
 
     def update_notes(self):
         
-      from calibre.gui2 import error_dialog, info_dialog # type: ignore
+        from calibre.gui2 import error_dialog, info_dialog # type: ignore
 
-      authorids = []
-      authors = []
-      authorstotal = 0
-      skippedtotal = 0
-      linkstotal = 0
-      clear = self.clearnotes_rb.isChecked()
-      event = _('Cleared') if clear else _('Added')
-      prep = _('from') if clear else _('to')
-      overwrite = self.overwrite_cb.isChecked()
-      db = self.gui.current_db.new_api
-      if self.srcAuthors_rb.isChecked():
-          authors = list(db.author_data().items())
-      elif self.srcBooks_rb.isChecked():
-          # Get currently selected books
-          print ("Get currently selected books") # Terisa
-          rows = self.gui.library_view.selectionModel().selectedRows()
-          if not rows or len(rows) == 0:
-              return error_dialog(self.gui, _('Cannot process books'),
-                              _('No books selected'), show=True)
-          # Map the rows to book ids
-          ids = list(map(self.gui.library_view.model().id, rows))
-          for bid in ids:
-              mi = db.get_metadata(bid)
-              for author in mi.authors:
-                  print ('Author: ', author) # Terisa
-                  aid = db.get_item_id('authors', author)
-                  note = db.export_note('authors', aid)
-                  print ("Note: ", note) # Terisa
-                  if clear and note:
-                      authorids.append(aid)
-                      continue
-                  elif ('Generated using the GR Author Notes plugin') in note and not overwrite:
-                      print ("Nota del plugin")
-                      continue
-                  else:
-                      authorids.append(aid)
-          authors = list(db.author_data(author_ids=authorids).items())
-      else:
-          info_dialog(self, _('Error'), _('No authors selected. Make sure you have chosen the correct Author Selection and/or that you have books selected.'), show=True)
-          return
+        authorids = []
+        authors = []
+        authorstotal = 0
+        skippedtotal = 0
+        linkstotal = 0
+        clear = self.clearnotes_rb.isChecked()
+        event = _('Cleared') if clear else _('Added')
+        prep = _('from') if clear else _('to')
+        overwrite = self.overwrite_cb.isChecked()
+        db = self.gui.current_db.new_api
+        if self.srcAuthors_rb.isChecked():
+            authors = list(db.author_data().items())
+        elif self.srcBooks_rb.isChecked():
+            # Get currently selected books
+            print ("Get currently selected books") # Terisa
+            rows = self.gui.library_view.selectionModel().selectedRows()
+            if not rows or len(rows) == 0:
+                return error_dialog(self.gui, _('Cannot process books'),
+                                _('No books selected'), show=True)
+            # Map the rows to book ids
+            ids = list(map(self.gui.library_view.model().id, rows))
+            for bid in ids:
+                mi = db.get_metadata(bid)
+                for author in mi.authors:
+                    print ('Author: ', author) # Terisa
+                    aid = db.get_item_id('authors', author)
+                    note = db.export_note('authors', aid)
+                    print ("Note: ", note) # Terisa
+                    if clear and note:
+                        authorids.append(aid)
+                        continue
+                    elif ('Generated using the GR Author Notes plugin') in note and not overwrite:
+                        print ("Nota del plugin")
+                        continue
+                    else:
+                        authorids.append(aid)
+            authors = list(db.author_data(author_ids=authorids).items())
+        else:
+            info_dialog(self, _('Error'), _('No authors selected. Make sure you have chosen the correct Author Selection and/or that you have books selected.'), show=True)
+            return
 
-      if not authors and not overwrite:
-          info_dialog(self, _('Info'), _('All selected authors already have their note set by GR Author Notes.'), show=True)
-          return
+        if not authors and not overwrite:
+            info_dialog(self, _('Info'), _('All selected authors already have their note set by GR Author Notes.'), show=True)
+            return
 
-      dlg = AuthorProgressDialog(self.gui, authors, db, authorstotal, skippedtotal, linkstotal, clear)
-      if dlg.wasCanceled():
+        dlg = AuthorProgressDialog(self.gui, authors, db, authorstotal, skippedtotal, linkstotal, clear)
+        if dlg.wasCanceled():
         # do whatever should be done if user cancelled
-        canceledtext = _(f'Process was canceled after updating ') + dlg.authorstotal + _(f' author(s) \n\n') + event + _(f' a total of ') + dlg.authorstotal + _(f' author bios ') + prep + _(f' notes.\n\n')
-        #canceledtext = _(f'Process was canceled after updating {dlg.authorstotal} author(s) \n\n{event} a total of {dlg.authorstotal} author bios {prep} notes.\n\n')
-        self.build_dialog(dlg, canceledtext, info_dialog, _('Canceled'))
-      else:
-        processedtext = _(f'Processed ') + str(len(authors)) + _(f' author(s) \n\n') + event + _(f' a total of ') + str(dlg.authorstotal) + _(f' author bios ') +  prep + _(f' notes. \n\n')
-        #processedtext = _(f'Processed {len(authors)} author(s) \n\n{event} a total of {dlg.authorstotal} author bios {prep} notes. \n\n')
-        self.build_dialog(dlg, processedtext, info_dialog, _('Updated files'))
-        self.close()
+            canceledtext = _(f'Process was canceled after updating ') + dlg.authorstotal + _(f' author(s) \n\n') + event + _(f' a total of ') + dlg.authorstotal + _(f' author bios ') + prep + _(f' notes.\n\n')
+            self.build_dialog(dlg, canceledtext, info_dialog, _('Canceled'))
+        else:
+            processedtext = _(f'Processed ') + str(len(authors)) + _(f' author(s) \n\n') + event + _(f' a total of ') + str(dlg.authorstotal) + _(f' author bios ') +  prep + _(f' notes. \n\n')
+            self.build_dialog(dlg, processedtext, info_dialog, _('Updated files'))
+            self.close()
 
     def build_dialog(self, dlg, text, info_dialog, title):
-      text = self.get_linked(dlg, text)
-      text = self.get_skipped(dlg, text)
-      info_dialog(self, title, text, show=True)
+        text = self.get_linked(dlg, text)
+        text = self.get_skipped(dlg, text)
+        info_dialog(self, title, text, show=True)
 
     def get_skipped(self, dlg, text):
         if dlg.skippedtotal > 0:
@@ -253,7 +263,6 @@ class Dialog(QDialog):
     def get_linked(self, dlg, text):
         if dlg.linkstotal > 0:
             textEnd = text + _(f'Added links to a total of ') + str(dlg.linkstotal) + _(f' authors.')
-            #return _(f'{text}Added links to a total of {dlg.linkstotal} authors.')
             return _(textEnd)
         else:
             return text

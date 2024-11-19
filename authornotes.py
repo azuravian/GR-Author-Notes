@@ -8,29 +8,45 @@ from calibre_plugins.grauthornotes.trans import translate, translate_list # type
 from calibre_plugins.grauthornotes.unzip import install_chrome # type: ignore
 
 import requests
+import logging
 from bs4 import BeautifulSoup as bs
 
 def link(author, db):
-    alink = ''
-    books = db.books_for_field('authors', author[0])
-    for book in books:
-        mi = db.get_metadata(book)
-        url = get_book_url(mi)
-        if not url:
+    """
+    Find and link the Goodreads URL for a given author in the database.
+
+    This function searches for the Goodreads URL of an author by comparing the author's name
+    with the names of authors retrieved from Goodreads. If a match is found, the URL is stored
+    in the database and returned.
+
+    Args:
+        author (tuple): A tuple containing author information. The first element is the author's name,
+                        and the second element is a dictionary with additional author details.
+        db (object): The database object that provides methods to interact with the book database.
+
+    Returns:
+        str: The Goodreads URL of the author if found, otherwise an empty string.
+    """
+    alink = ''      # represents the Goodreads URL of the author
+    books = db.books_for_field('authors', author[0])        # get all books by the author
+    for book in books:      # iterate through each book by the author
+        mi = db.get_metadata(book)      # get metadata for the book
+        url = get_book_url(mi)      # get the Goodreads URL of the book
+        if not url:     # if the URL is not found, continue to the next book             
             continue
-        print ('url: ', url) # Terisa
-        gr_authors = get_booksoup(url)
-        aname = ''.join(get_aname(author).split())
-        aname = aname.replace ("'", "&apos;") # Terisa
-        print ('aname: ', aname) # Terisa
+        logging.log(logging.INFO, f'url: {url}')       # Log the URL
+        gr_authors = get_booksoup(url)      # get the list of authors for the book from Goodreads
+        cleaned_author_name = ''.join(get_aname(author).split())        # get the author's name from Calibre
+        cleaned_author_name = cleaned_author_name.replace ("'", "&apos;")       # Terisa
+        logging.log(logging.INFO, f'Cleaned Author Name: {cleaned_author_name}')        # Terisa
         for a in gr_authors:
-            clname = ''.join(a.get('name').split())
-            print ('clname: ', clname) # Terisa
-            if aname.lower() != clname.lower():
-                print(f'{aname} is not the same as {clname}')
+            gr_author_name = ''.join(a.get('name').split())        # get the author's name from Goodreads
+            logging.log(logging.INFO, f'GR Author Name: {gr_author_name}') # Terisa
+            if cleaned_author_name.lower() != gr_author_name.lower():     # compare the names
+                logging.log(logging.DEBUG, f'{cleaned_author_name} is not the same as {gr_author_name}')
                 continue
             else:
-                print(f'{aname} is the same as {clname}')
+                logging.log(logging.DEBUG, f'{cleaned_author_name} is the same as {gr_author_name}')
                 alink = a.get('url')
         if alink != '':
             break
@@ -142,10 +158,12 @@ def html_color(bgcolor, bordercolor, textcolor, html):
     return html
 
 def get_aname(author):
-    pattern = re.compile('editor', re.IGNORECASE)
-    aname = author[1].get('name')
-    aname = pattern.sub('', aname)
-    return aname.replace('()', '').strip()
+    editor_pattern = re.compile('editor', re.IGNORECASE)
+    aname = author[1].get('name', '')
+    cleaned_author_name = editor_pattern.sub('', aname)
+    aname = aname.replace('()', '')
+    aname = aname.strip()
+    return aname
 
 def get_author_image(soup):
     imgdiv = soup.find( class_ = "leftContainer authorLeftContainer")

@@ -254,8 +254,8 @@ class Dialog(QDialog):
 
     def get_skipped(self, dlg, text):
         if dlg.skippedtotal > 0:
+            text = f'{text}\n\n'
             textEnd = text + _(f'A total of ') + str(dlg.skippedtotal) + _(f' author(s) were skipped based on html content.')
-            #return _(f'{text}A total of {dlg.skippedtotal} author(s) were skipped based on html content.')
             return (textEnd)
         else:
             return text

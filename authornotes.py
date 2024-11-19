@@ -83,7 +83,7 @@ def notes(author, db, bgcolor, bordercolor, textcolor, author_link):
                 soup = get_soup(url)
                 #open('D:\\testa.xml','w').write(soup.prettify ())
             except Exception as e:
-                print("Soup Error: ", e)
+                logging.log(logging.ERROR, f"Soup Error: {e}")
 
             #Get authorName
             authorName = soup.find(class_ = "authorName")
@@ -94,7 +94,7 @@ def notes(author, db, bgcolor, bordercolor, textcolor, author_link):
                 #Get Author bio
                 bio = get_bio(soup)
             except Exception as e:
-                print("Bio Error: ", e)
+                logging.log(logging.ERROR, f"Bio Error: {e}")
 
             #Get dataTitles
             dataTitles = soup.find_all(class_ = "dataTitle")
@@ -107,18 +107,18 @@ def notes(author, db, bgcolor, bordercolor, textcolor, author_link):
             dataItems = soup.find_all(class_ = "dataItem")
             try:
                 items = items_list(dataItems)
-            except Exception:
-                print("Items_List error")
+            except Exception as e:
+                logging.log(logging.ERROR, f"Items_List error: {e}")
             try:
                 items = fix_items(items, dataTitles, titles)
-            except Exception:
-                print("fix_items error")
+            except Exception as e:
+                logging.log(logging.ERROR, f"fix_items error: {e}")
 
             #Get author image
             try:
                 dataurl = get_author_image(soup)
-            except Exception:
-                print("get image error")
+            except Exception as e:
+                logging.log(logging.ERROR, f"Get image error: {e}")
 
             #Translate
             if prefs['translate']:
@@ -131,8 +131,8 @@ def notes(author, db, bgcolor, bordercolor, textcolor, author_link):
             try:
                 html = gen_html(authorName, bio, titles, items, dataurl)
                 html = html_color(bgcolor, bordercolor, textcolor, html)
-            except Exception:
-                print("html error")
+            except Exception as e:
+                logging.log(logging.ERROR, f"html error: {e}")
 
             #Set author note
             try:
@@ -174,12 +174,9 @@ def get_author_image(soup):
     return f'data:image/jpeg;base64,{finalimg}'
 
 def get_bio(soup):
-    biodiv = soup.find( class_ = "aboutAuthorInfo")
-    #open('D:\\testd.xml','w').write(biodiv.prettify ())
-    biospans = biodiv.find_all( "span" )
-    #print (biospans[-1])
-    #print (len (biospans))
-    return biospans[-1] if len(biospans) >= 1 else ''
+    biodiv = soup.find( class_ = "aboutAuthorInfo")     # find the div containing the author's bio
+    biospans = biodiv.find_all( "span" )    # find all the spans in the div
+    return biospans[-1] if len(biospans) >= 1 else ''     # return the last span in the div
 
 def get_author_url(author):
     aname = get_aname(author)

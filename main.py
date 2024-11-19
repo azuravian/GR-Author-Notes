@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import contextlib
+import logging
 from qt.core import Qt, QProgressDialog, QDialog, QVBoxLayout, QHBoxLayout, QPushButton, QRadioButton, QMessageBox, QWidget, QTimer, QGroupBox, QCheckBox # type: ignore
 
 from calibre_plugins.grauthornotes.config import prefs # type: ignore
@@ -206,7 +207,7 @@ class Dialog(QDialog):
             authors = list(db.author_data().items())
         elif self.srcBooks_rb.isChecked():
             # Get currently selected books
-            print ("Get currently selected books") # Terisa
+            logging.log(logging.INFO, "Get currently selected books")
             rows = self.gui.library_view.selectionModel().selectedRows()
             if not rows or len(rows) == 0:
                 return error_dialog(self.gui, _('Cannot process books'),
@@ -216,15 +217,14 @@ class Dialog(QDialog):
             for bid in ids:
                 mi = db.get_metadata(bid)
                 for author in mi.authors:
-                    print ('Author: ', author) # Terisa
+                    logging.log(logging.INFO, f'Author: {author}')
                     aid = db.get_item_id('authors', author)
                     note = db.export_note('authors', aid)
-                    print ("Note: ", note) # Terisa
+                    logging.log(logging.DEBUG, f'Note: {note}')
                     if clear and note:
                         authorids.append(aid)
                         continue
                     elif ('Generated using the GR Author Notes plugin') in note and not overwrite:
-                        print ("Nota del plugin")
                         continue
                     else:
                         authorids.append(aid)
